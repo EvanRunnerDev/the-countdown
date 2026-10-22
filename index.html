@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#000000">
+  <title>Countdown</title>
+  <style>
+    :root { color-scheme: dark; --white: #fff; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; min-height: 100dvh; padding: 24px;
+      display: grid; place-items: center; background: #000; color: var(--white);
+      font-family: Inter, "Helvetica Neue", Arial, sans-serif;
+    }
+    main { width: min(100%, 980px); text-align: center; }
+    .eyebrow, .unit-label {
+      text-transform: uppercase; letter-spacing: .24em; font-size: .76rem;
+    }
+    .eyebrow { margin-bottom: 24px; }
+    h1 {
+      margin: 0 0 50px; font-size: clamp(1.5rem, 4vw, 2.35rem);
+      font-weight: 600; letter-spacing: -.035em;
+    }
+    .timer {
+      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: start;
+      gap: clamp(6px, 2vw, 22px); font-variant-numeric: tabular-nums;
+    }
+    .unit { min-width: 0; }
+    .number {
+      display: block; font-size: clamp(2.4rem, 10vw, 6rem); font-weight: 650;
+      line-height: 1.1; letter-spacing: -.055em; white-space: nowrap;
+      text-shadow: 0 0 7px #fff, 0 0 18px #fff8, 0 0 40px #fff3;
+    }
+    .unit-label { display: block; margin-top: 16px; color: #d4d4d4; }
+    .reaction {
+      display: block; width: 200px; height: 200px; object-fit: contain;
+      margin: 34px auto 0;
+    }
+    @media (max-width: 480px) {
+      body { padding: 22px 12px; }
+      .eyebrow, .unit-label { letter-spacing: .13em; font-size: .62rem; }
+      h1 { margin-bottom: 42px; }
+      .timer { gap: 3px; }
+      .number { font-size: clamp(2rem, 9.5vw, 3rem); letter-spacing: -.06em; }
+      .unit-label { margin-top: 12px; }
+      .reaction { margin-top: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="eyebrow">Court</div>
+    <h1>October 22, 2026 <span aria-hidden="true">·</span> 1:30 PM</h1>
+    <section class="timer" aria-label="Time remaining">
+      <div class="unit"><span class="number" id="days">00</span><span class="unit-label">Days</span></div>
+      <div class="unit"><span class="number" id="hours">00</span><span class="unit-label">Hours</span></div>
+      <div class="unit"><span class="number" id="minutes">00</span><span class="unit-label">Minutes</span></div>
+      <div class="unit"><span class="number" id="seconds">00</span><span class="unit-label">Seconds</span></div>
+    </section>
+    <video
+      class="reaction"
+      autoplay
+      loop
+      muted
+      playsinline
+      preload="metadata"
+      aria-label="Looping reaction animation"
+    >
+      <source src="https://images-ext-1.discordapp.net/external/08ss5TYhcVGkQVUW2VWjxJuPy-LgZyxDN9X3-Kddr0Y/https/static.klipy.com/ii/4493325008d34b7bf8cd6813cd5c1619/19/73/tC9bYib0AhWugN.mp4" type="video/mp4">
+    </video>
+  </main>
+  <script>
+    // The target uses your device's local timezone.
+    const target = new Date(2026, 9, 22, 13, 30, 0).getTime();
+    const el = Object.fromEntries(["days", "hours", "minutes", "seconds"].map(id => [id, document.getElementById(id)]));
+    const pad = n => String(n).padStart(2, "0");
+    function tick() {
+      let left = Math.max(0, Math.floor((target - Date.now()) / 1000));
+      const d = Math.floor(left / 86400); left %= 86400;
+      const h = Math.floor(left / 3600); left %= 3600;
+      const m = Math.floor(left / 60); const s = left % 60;
+      el.days.textContent = pad(d);
+      el.hours.textContent = pad(h);
+      el.minutes.textContent = pad(m);
+      el.seconds.textContent = pad(s);
+    }
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
